@@ -11,7 +11,7 @@ public class ShopUtils {
 
     public static ResponseEntity<String> getResponseEntity(String responseMessage, HttpStatus httpStatus) {
 
-        return new ResponseEntity<String>("{\"messag\":\"" + responseMessage + "\"}", httpStatus);
+        return new ResponseEntity<>("{\"message\":\"" + responseMessage + "\"}", httpStatus);
 
     }
 }
