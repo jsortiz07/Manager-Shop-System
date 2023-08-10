@@ -14,10 +14,16 @@ import java.util.Map;
 @RestController
 public class UserRestImpl implements UserRest {
 
+    //se llaman las dependencias del servicio user para implementarlo en esta clase a partir del polimorfismo
     @Autowired
     UserService userService;
+
+
+    // se sobreescribe el metodo implementado de la clase UserRest
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
+
+        //try cath para la tolerancia a fallas e identificacion de errores de compilacion
         try {
             return userService.signUp(requestMap);
         }catch (Exception ex){

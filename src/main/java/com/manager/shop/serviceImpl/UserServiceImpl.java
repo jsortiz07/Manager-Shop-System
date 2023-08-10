@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
             ex.printStackTrace();
         }
 
-        return ShopUtils.getResponseEntity("Algo salio re mallllll", HttpStatus.INTERNAL_SERVER_ERROR);
+        return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 
