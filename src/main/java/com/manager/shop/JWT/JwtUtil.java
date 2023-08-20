@@ -18,10 +18,12 @@ public class JwtUtil {
 
     // La clase se usa para crear un objeto que se puede firmar y verificar usando una clave secreta o una clave pública
     public String extractUsername(String token){
+
         return extractClaims(token,Claims::getSubject);
     }
 
     public Date extractExpiration(String token){
+
         return extractClaims(token,Claims::getExpiration);
     }
 
@@ -36,6 +38,7 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token){
+
         return extractExpiration(token).before(new Date());
     }
 
