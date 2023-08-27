@@ -34,7 +34,7 @@ public class JwtUtil {
 
     //metodo para extrer el cuerpo del token
     public Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(secret).parseClaimsJwt(token).getBody();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token){

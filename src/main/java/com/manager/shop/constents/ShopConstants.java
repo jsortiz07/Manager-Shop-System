@@ -6,4 +6,6 @@ public class ShopConstants {
     public static final String SOMETHING_WENT_WRONG = "Ups algo salio mal";
 
     public static final String INVALID_DATA = "Datos invalidos";
+
+    public static final String UNAUTHORIZED_ACCES = "Acceso no autorizado";
 }
