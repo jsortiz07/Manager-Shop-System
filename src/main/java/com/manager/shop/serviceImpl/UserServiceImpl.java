@@ -7,6 +7,7 @@ import com.manager.shop.constents.ShopConstants;
 import com.manager.shop.dao.UserDao;
 import com.manager.shop.model.User;
 import com.manager.shop.service.UserService;
+import com.manager.shop.utils.EmailUtils;
 import com.manager.shop.utils.ShopUtils;
 import com.manager.shop.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     JwtFilter jwtFilter;
+
+    @Autowired
+    EmailUtils emailUtils;
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
@@ -135,12 +139,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         try {
-
+            //solo si tiene rol admin (se extrae desde los claims)
             if (jwtFilter.isAdmin()){
               Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
-
+                //si existe el usuario se ejecuta la actualizacion de estado
               if(!optional.isEmpty()){
                     userDao.updateStatus(requestMap.get("status"),Integer.parseInt(requestMap.get("id")));
+                    sendMailToAllAdmin(requestMap.get("status"),optional.get().getEmail(),userDao.getAllAdmin());
                     return ShopUtils.getResponseEntity("Se actualiza estado de usuario con exito",HttpStatus.OK);
               }else {
                     return ShopUtils.getResponseEntity("El usuario id no existe, por favor registrese",HttpStatus.OK);
@@ -150,9 +155,20 @@ public class UserServiceImpl implements UserService {
             }
 
         }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        System.out.println("aqui llega ");
+        return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
+        allAdmin.remove(jwtFilter.getCurrentUser());
+        //se envia correo para habilitacion y deshabilitacion
+        if (status!=null && status.equalsIgnoreCase("true")){
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),"Aprobacion cuenta","USER:-"+user+"\n es aprobado por el admin:"+jwtFilter.getCurrentUser(),allAdmin);
+        }else {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),"Deshabilitacion cuenta","USER:-"+user+"\n es deshabilitada por el admin: "+jwtFilter.getCurrentUser(),allAdmin);
 
         }
-
-        return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

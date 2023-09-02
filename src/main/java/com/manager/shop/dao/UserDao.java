@@ -14,6 +14,8 @@ public interface UserDao extends JpaRepository<User,Integer> {
 
     List<UserWrapper>getAllUser();
 
+    List<String> getAllAdmin();
+
     @Transactional // anotaciones para ejecutar el query de modificacion creaod en UserDao
     @Modifying
     Integer updateStatus(@Param("status")String status,@Param("id")Integer id);
