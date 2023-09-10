@@ -5,6 +5,7 @@ import com.manager.shop.rest.UserRest;
 import com.manager.shop.service.UserService;
 import com.manager.shop.utils.ShopUtils;
 import com.manager.shop.wrapper.UserWrapper;
+import com.sun.jdi.event.ExceptionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,32 @@ public class UserRestImpl implements UserRest {
 
         return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+       try {
+           return userService.checkToken();
+       }catch (Exception ex){
+            ex.printStackTrace();
+       }
+
+        return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try {
+           return userService.changePassword(requestMap);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+
 
 
 }

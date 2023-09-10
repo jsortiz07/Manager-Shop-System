@@ -161,6 +161,8 @@ public class UserServiceImpl implements UserService {
         return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+
     private void sendMailToAllAdmin(String status, String user, List<String> allAdmin) {
         allAdmin.remove(jwtFilter.getCurrentUser());
         //se envia correo para habilitacion y deshabilitacion
@@ -171,4 +173,36 @@ public class UserServiceImpl implements UserService {
 
         }
     }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+
+        return ShopUtils.getResponseEntity("true",HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try {
+            User userObj = userDao.findByEmail(jwtFilter.getCurrentUser());
+            if (!userObj.equals(null)){
+                if (userObj.getPassword().equals(requestMap.get("oldPassword"))){
+                    userObj.setPassword(requestMap.get("newPassword"));
+                    userDao.save(userObj);
+
+                    return ShopUtils.getResponseEntity("Contraseña actualizada correctamente",HttpStatus.OK);
+
+                }
+                return ShopUtils.getResponseEntity("La contraseña actual es incorrecta",HttpStatus.BAD_REQUEST);
+            }
+            return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return ShopUtils.getResponseEntity(ShopConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+
 }
